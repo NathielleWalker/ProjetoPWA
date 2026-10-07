@@ -1,0 +1,673 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <meta name="theme-color" content="#8edcf4">
+    <meta
+        name="description"
+        content="ConnectPet Shop - produtos, serviços e cuidados para seu pet"
+    >
+    <title>ConnectPet Shop</title>
+    <link rel="manifest" href="manifest.json">
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+    <!-- =========================
+         CABEÇALHO
+    ========================== -->
+
+    <header class="topbar">
+        <a href="#inicio" class="logo">
+            <span class="logo-paw">
+            </span>
+            <span>
+                Connect<span>Pet</span>
+            </span>
+        </a>
+
+        <nav class="nav" id="nav">
+            <a href="#inicio">
+                Início
+            </a>
+            <a href="#categorias">
+                Categorias
+            </a>
+            <a href="#produtos">
+                Produtos
+           </a>
+           <a href="#servicos">
+                Serviços
+            </a>
+            <a href="#agendamento">
+                Agendamento
+            </a>
+        </nav>
+
+        <div class="header-actions">
+            <button
+                class="icon-btn"
+                id="favoritesBtn"
+                aria-label="Favoritos">
+                ♡
+            </button>
+
+            <button
+                class="cart-btn"
+                id="cartBtn"
+                aria-label="Carrinho">
+                <img src="Imagens/carrinho.png" width="30px" height="30px">
+                <span id="cartCount">
+                    0
+                </span>
+            </button>
+
+            <button
+                class="menu-btn"
+                id="menuBtn"
+                aria-label="Abrir menu">
+                ☰
+            </button>
+        </div>
+    </header>
+
+
+    <main>
+        <!-- =========================
+             BANNER PRINCIPAL
+        ========================== -->
+        <section
+            class="hero"
+            id="inicio">
+            <div class="hero-content">
+                <h1>
+                    Tudo o que seu pet precisa em um só lugar
+                </h1>
+                <p>
+                    Encontre produtos, serviços e cuidados para deixar
+                    a rotina do seu melhor amigo mais saudável,
+                    divertida e confortável.
+                </p>
+                <div class="hero-buttons">
+                    <a
+                        href="#produtos"
+                        class="primary-btn">
+                        Comprar agora
+
+                    </a>
+                    <a
+                        href="#servicos"
+                        class="secondary-btn">
+                        Conhecer serviços
+                    </a>
+                </div>
+            </div>
+            <div class="hero-pets">
+                <img
+                    class="hero-dog"
+                    src="Imagens/CONNECT PET (1).png"
+                    alt="Cachorro">
+            </div>
+        </section>
+
+
+        <!-- =========================
+             CATEGORIAS
+        ========================== -->
+
+        <section
+            class="intro-section"
+            id="categorias">
+            <div class="section-heading">
+                <span class="section-kicker">
+                    Encontre tudo com facilidade
+                </span>
+                <h2>
+                    Conheça nossas categorias
+                </h2>
+                <p>
+                    Produtos selecionados para diferentes momentos
+                    da vida do seu pet.
+                </p>
+            </div>
+            <div class="category-grid">
+
+                <!-- ALIMENTAÇÃO -->
+                <button
+                    class="category-card"
+                    data-filter="Alimentação">
+                    <span class="category-icon">
+                        <img
+                            src="Imagens/alimentacao.png"
+                            alt="Alimentação">
+                    </span>
+                    <h3>
+                        Alimentação
+                    </h3>
+                    <p>
+                        Rações, petiscos e opções para uma rotina
+                        mais saudável.
+                    </p>
+                    <span class="category-link">
+                        Ver produtos 
+                    </span>
+                </button>
+
+                <!-- HIGIENE -->
+                <button
+                    class="category-card"
+                    data-filter="Higiene">
+                    <span class="category-icon">
+                        <img
+                            src="Imagens/higiene.png"
+                            alt="Higiene">
+                    </span>
+                    <h3>
+                        Higiene
+                    </h3>
+                    <p>
+                        Cuidados para manter seu pet limpo,
+                        confortável e feliz.
+                    </p>
+                    <span class="category-link">
+                        Ver produtos
+                    </span>
+                </button>
+
+                <!-- BRINQUEDOS -->
+                <button
+                    class="category-card"
+                    data-filter="Brinquedos">
+                    <span class="category-icon">
+                        <img
+                            src="Imagens/brinquedo.png"
+                            alt="Brinquedos">
+                    </span>
+                    <h3>
+                        Brinquedos
+                    </h3>
+                    <p>
+                        Opções para estimular, divertir e
+                        enriquecer a rotina.
+                    </p>
+                    <span class="category-link">
+                        Ver produtos 
+                    </span>
+                </button>
+
+                <!-- ACESSÓRIOS -->
+                <button
+                    class="category-card"
+                    data-filter="Acessórios">
+                    <span class="category-icon">
+                        <img
+                            src="Imagens/acessorio.png"
+                            alt="Acessórios">
+                    </span>
+                    <h3>
+                        Acessórios
+                    </h3>
+                    <p>
+                        Coleiras, camas, comedouros e acessórios
+                        para o dia a dia.
+                    </p>
+                    <span class="category-link">
+                        Ver produtos →
+                    </span>
+                </button>
+            </div>
+        </section>
+
+
+        <!-- =========================
+             DICAS
+        ========================== -->
+        <section class="tips">
+            <div class="tips-content">
+                <span class="section-kicker light">
+                    Dicas para cuidar do seu pet
+                </span>
+                <h2>
+                    Pequenos cuidados fazem uma grande diferença
+                </h2>
+                <p>
+                    Uma rotina equilibrada combina alimentação adequada,
+                    higiene, atividade física, brincadeiras e acompanhamento
+                    profissional.
+                </p>
+                <div class="tip-list">
+                    <!-- ALIMENTAÇÃO -->
+                    <div class="tip-item">
+                        <span class="tip-image">
+                        </span>
+                        <strong>
+                            Alimentação
+                        </strong>
+                        <small>
+                            Escolha adequada para cada fase.
+                        </small>
+                    </div>
+
+                    <!-- ENRIQUECIMENTO -->
+                    <div class="tip-item">
+                        <span class="tip-image">
+                        </span>
+                        <strong>
+                            Enriquecimento
+                        </strong>
+                        <small>
+                            Brincadeiras e estímulos mentais.
+                        </small>
+                    </div>
+
+                    <!-- HIGIENE -->
+                    <div class="tip-item">
+                        <span class="tip-image">
+                        </span>
+                        <strong>
+                            Higiene
+                        </strong>
+                        <small>
+                            Banho e cuidados regulares.
+                        </small>
+                    </div>
+
+                    <!-- ATIVIDADE -->
+                    <div class="tip-item">
+                        <span class="tip-image">
+                        </span>
+                        <strong>
+                            Atividade
+                        </strong>
+                        <small>
+                            Movimento e momentos de diversão.
+                        </small>
+                    </div>
+                </div>
+            </div>
+
+
+            <!--
+                IMAGEM DO PET DAS DICAS
+            -->
+
+            <div class="tips-pet">
+                <img
+                    src="Imagens/gato.png"
+                    alt="Pet">
+            </div>
+
+        </section>
+
+
+        <!-- =========================
+             PRODUTOS
+        ========================== -->
+        <section
+            class="products-section"
+            id="produtos">
+            <div class="products-header">
+                <div class="section-heading left">
+                    <span class="section-kicker">
+                        Destaques da loja
+                    </span>
+
+                    <h2>
+                        Produtos para o seu PET
+                    </h2>
+                </div>
+
+
+                <div class="product-tools">
+                    <label class="search-box">
+                        <span>
+                            ⌕
+                        </span>
+
+                        <input
+                            type="search"
+                            id="searchInput"
+                            placeholder="Buscar produto..."
+                        >
+                    </label>
+
+                    <select id="categoryFilter">
+                        <option value="Todos">
+                            Todos
+                        </option>
+                        <option value="Alimentação">
+                            Alimentação
+                        </option>
+                        <option value="Higiene">
+                            Higiene
+                        </option>
+                        <option value="Brinquedos">
+                            Brinquedos
+                        </option>
+                        <option value="Acessórios">
+                            Acessórios
+                        </option>
+                    </select>
+                </div>
+            </div>
+
+
+            <!--
+                OS PRODUTOS SÃO GERADOS PELO JAVASCRIPT
+            -->
+            <div
+                class="product-grid"
+                id="productGrid">
+            </div>
+            <p
+                class="empty-state"
+                id="emptyState"
+                hidden>
+                Nenhum produto encontrado.
+            </p>
+
+        </section>
+
+        <!-- =========================
+             SERVIÇOS
+        ========================== -->
+        <section
+            class="services"
+            id="servicos">
+            <div class="section-heading">
+                <span class="section-kicker">
+                    Além da loja
+                </span>
+                <h2>
+                    Serviços para cuidar do seu pet
+                </h2>
+                <p>
+                    Agende um horário e deixe os cuidados por nossa conta.
+                </p>
+            </div>
+
+
+            <div class="service-grid">
+                <!-- BANHO E TOSA -->
+                <article class="service-card">
+                    <div class="service-icon">
+                        <img
+                            src="Imagens/banho_a.png"
+                            alt="Banho e Tosa">
+
+                    </div>
+
+
+                    <h3>
+                        Banho & Tosa
+                    </h3>
+
+
+                    <p>
+                        Higiene e cuidados para deixar seu pet confortável.
+                    </p>
+
+
+                    <button
+                        class="outline-btn service-book"
+                        data-service="Banho & Tosa">
+
+                        Agendar
+
+                    </button>
+
+                </article>
+
+
+
+                <!-- TOSA HIGIÊNICA -->
+
+                <article class="service-card">
+
+                    <div class="service-icon">
+
+                        <img
+                            src="Imagens/tosa.png"
+                            alt="Tosa Higiênica">
+
+                    </div>
+
+
+                    <h3>
+                        Tosa Higiênica
+                    </h3>
+
+
+                    <p>
+                        Cuidados específicos para manter a higiene em dia.
+                    </p>
+
+
+                    <button
+                        class="outline-btn service-book"
+                        data-service="Tosa Higiênica">
+
+                        Agendar
+
+                    </button>
+
+                </article>
+
+
+
+                <!-- CONSULTA -->
+
+                <article class="service-card">
+
+                    <div class="service-icon">
+
+                        <img
+                            src="Imagens/consulta.png"
+                            alt="Consulta">
+
+                    </div>
+
+
+                    <h3>
+                        Consulta
+                    </h3>
+
+
+                    <p>
+                        Atendimento para acompanhar a saúde e o bem-estar.
+                    </p>
+
+
+                    <button
+                        class="outline-btn service-book"
+                        data-service="Consulta">
+
+                        Agendar
+
+                    </button>
+
+                </article>
+
+            </div>
+
+        </section>
+
+
+        <!-- =========================
+             AGENDAMENTO
+        ========================== -->
+
+        <section
+            class="appointment"
+            id="agendamento">
+
+            <div>
+
+                <span class="section-kicker light">
+                    Seu pet merece esse cuidado
+                </span>
+
+
+                <h2>
+                    Agende um serviço de forma rápida
+                </h2>
+
+
+                <p>
+                    Escolha o serviço, informe seus dados e confirme o horário.
+                </p>
+
+            </div>
+
+
+            <button
+                class="primary-btn light-btn"
+                id="openAppointment">
+
+                Agendar agora 
+
+            </button>
+
+        </section>
+
+    </main>
+
+    <!-- =========================
+    AGENDAMENTO
+    ========================== -->
+
+    <div
+        class="modal"
+        id="appointmentModal"
+        aria-hidden="true">
+
+        <div class="modal-card">
+
+
+            <button
+                class="modal-close"
+                id="closeAppointment">
+
+                ×
+
+            </button>
+
+
+            <span class="section-kicker">
+                Agendamento
+            </span>
+
+
+            <h2>
+                Cuide do seu pet
+            </h2>
+
+
+            <form id="appointmentForm">
+
+
+                <label>
+
+                    Nome
+
+                    <input
+                        type="text"
+                        id="clientName"
+                        required
+                        placeholder="Seu nome">
+
+                </label>
+
+
+                <label>
+
+                    Pet
+
+                    <input
+                        type="text"
+                        id="petName"
+                        required
+                        placeholder="Nome do seu pet">
+
+                </label>
+
+
+                <label>
+
+                    Serviço
+
+                    <select
+                        id="serviceSelect"
+                        required>
+
+                        <option value="">
+                            Selecione
+                        </option>
+
+                        <option>
+                            Banho & Tosa
+                        </option>
+
+                        <option>
+                            Tosa Higiênica
+                        </option>
+
+                        <option>
+                            Consulta
+                        </option>
+
+                    </select>
+
+                </label>
+
+
+                <label>
+
+                    Data
+
+                    <input
+                        type="date"
+                        id="appointmentDate"
+                        required>
+
+                </label>
+
+
+                <button
+                    class="primary-btn"
+                    type="submit">
+
+                    Confirmar agendamento
+
+                </button>
+
+            </form>
+
+
+            <p
+                class="form-message"
+                id="formMessage">
+            </p>
+
+        </div>
+
+    </div>
+
+
+    <!-- TOAST -->
+
+    <div
+        class="toast"
+        id="toast">
+    </div>
+
+
+    <script src="script.js"></script>
+
+</body>
+
+</html>
