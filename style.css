@@ -1047,3 +1047,11 @@ section {
         top: -85px;
     }
 }
+
+
+
+@media (max-width: 768px) {
+    body {
+        background: red !important;
+    }
+}
