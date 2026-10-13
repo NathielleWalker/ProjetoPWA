@@ -1,874 +1,260 @@
-const products = [
 
-    {
-        id: 1,
-        name: "Ração Premium",
-        category: "Alimentação",
-        price: 79.90,
-        image: "Imagens/produtos/images (1).jpg",
-        description: "Alimento completo para uma rotina equilibrada."
-    },
+// PRODUTOS
 
-    {
-        id: 2,
-        name: "Petisco Natural",
-        category: "Alimentação",
-        price: 24.90,
-        image: "Imagens/produtos/petisco.png",
-        description: "Petisco para recompensar com carinho."
-    },
-
-    {
-        id: 3,
-        name: "Shampoo Suave",
-        category: "Higiene",
-        price: 32.90,
-        image: "Imagens/produtos/shampoo1.jpg",
-        description: "Limpeza suave para pele e pelos."
-    },
-
-    {
-        id: 4,
-        name: "Brinquedo Mordedor",
-        category: "Brinquedos",
-        price: 29.90,
-        image: "Imagens/produtos/brinquedo.webp",
-        description: "Diversão e estímulo para o seu pet."
-    },
-
-    {
-        id: 5,
-        name: "Bola Interativa",
-        category: "Brinquedos",
-        price: 39.90,
-        image: "Imagens/produtos/bola.jpg",
-        description: "Brincadeira para gastar energia."
-    },
-
-    {
-        id: 6,
-        name: "Cama Confortável",
-        category: "Acessórios",
-        price: 119.90,
-        image: "Imagens/produtos/cama.jpg",
-        description: "Um cantinho confortável para descansar."
-    },
-
-    {
-        id: 7,
-        name: "Coleira Ajustável",
-        category: "Acessórios",
-        price: 44.90,
-        image: "Imagens/produtos/coleira.jpg",
-        description: "Conforto e segurança para os passeios."
-    },
-
-    {
-        id: 8,
-        name: "Kit Higiene",
-        category: "Higiene",
-        price: 54.90,
-        image: "Imagens/produtos/kithigiene.webp",
-        description: "Itens essenciais para a rotina de cuidados."
-    },
-
-    {
-        id: 9,
-        name: "Comedouro",
-        category: "Acessórios",
-        price: 35.90,
-        image: "Imagens/produtos/comedouro.jpg",
-        description: "Prático para água e alimentação."
-    },
-
-    {
-        id: 10,
-        name: "Arranhador",
-        category: "Brinquedos",
-        price: 89.90,
-        image: "Imagens/produtos/arranhador.jpg",
-        description: "Diversão e enriquecimento para gatos."
-    }
-
+const listaProdutos = [
+    { id: 1, nome: "Ração Premium", categoria: "Alimentação", preco: 79.90, imagem: "Imagens/produtos/images (1).jpg", descricao: "Alimento completo para uma rotina equilibrada." },
+    { id: 2, nome: "Petisco Natural", categoria: "Alimentação", preco: 24.90, imagem: "Imagens/produtos/petisco.png", descricao: "Petisco para recompensar com carinho." },
+    { id: 3, nome: "Shampoo Suave", categoria: "Higiene", preco: 32.90, imagem: "Imagens/produtos/shampoo1.jpg", descricao: "Limpeza suave para pele e pelos." },
+    { id: 4, nome: "Brinquedo Mordedor", categoria: "Brinquedos", preco: 29.90, imagem: "Imagens/produtos/brinquedo.webp", descricao: "Diversão e estímulo para o seu pet." },
+    { id: 5, nome: "Bola Interativa", categoria: "Brinquedos", preco: 39.90, imagem: "Imagens/produtos/bola.jpg", descricao: "Brincadeira para gastar energia." },
+    { id: 6, nome: "Cama Confortável", categoria: "Acessórios", preco: 119.90, imagem: "Imagens/produtos/cama.jpg", descricao: "Um cantinho confortável para descansar." },
+    { id: 7, nome: "Coleira Ajustável", categoria: "Acessórios", preco: 44.90, imagem: "Imagens/produtos/coleira.jpg", descricao: "Conforto e segurança para os passeios." },
+    { id: 8, nome: "Kit Higiene", categoria: "Higiene", preco: 54.90, imagem: "Imagens/produtos/kithigiene.webp", descricao: "Itens essenciais para a rotina de cuidados." },
+    { id: 9, nome: "Comedouro", categoria: "Acessórios", preco: 35.90, imagem: "Imagens/produtos/comedouro.jpg", descricao: "Prático para água e alimentação." },
+    { id: 10, nome: "Arranhador", categoria: "Brinquedos", preco: 89.90, imagem: "Imagens/produtos/arranhador.jpg", descricao: "Diversão e enriquecimento para gatos." }
 ];
 
 
-/* =========================
-   CARRINHO E FAVORITOS
-========================= */
+let carrinho = {};
+let favoritos = [];
+let temporizadorAviso;
 
-let cart = JSON.parse(
-    localStorage.getItem("connectpet-cart") || "{}"
-);
+const elemento = id => document.getElementById(id);
+const gradeProdutos = elemento("productGrid");
+const campoBusca = elemento("searchInput");
+const filtroCategoria = elemento("categoryFilter");
+const estadoVazio = elemento("emptyState");
+const contadorCarrinho = elemento("cartCount");
+const aviso = elemento("toast");
+const navegacao = elemento("nav");
+const modalAgendamento = elemento("appointmentModal");
+const seletorServico = elemento("serviceSelect");
+const campoData = elemento("appointmentDate");
+const modalCarrinho = elemento("cartModal");
+const itensCarrinho = elemento("cartItems");
+const totalCarrinhoTexto = elemento("cartTotal");
+const botaoConfirmarCompra = elemento("confirmPurchase");
 
-let favorites = JSON.parse(
-    localStorage.getItem("connectpet-favorites") || "[]"
-);
 
+// FUNÇÕES 
 
-/*
-    Compatibilidade com a versão anterior.
+function totalCarrinho() {
+    return Object.values(carrinho).reduce((total, quantidade) => total + quantidade, 0);
+}
 
-    Se o navegador ainda tiver o carrinho
-    antigo salvo como array, transformamos
-    automaticamente em quantidade.
-*/
+function mostrarAviso(mensagem) {
+    aviso.textContent = mensagem;
+    aviso.classList.add("show");
+    clearTimeout(temporizadorAviso);
+    temporizadorAviso = setTimeout(() => aviso.classList.remove("show"), 2200);
+}
 
-if (Array.isArray(cart)) {
-
-    const oldCart = {};
-
-    cart.forEach(id => {
-
-        oldCart[id] =
-            (oldCart[id] || 0) + 1;
-
-    });
-
-    cart = oldCart;
-
-    localStorage.setItem(
-        "connectpet-cart",
-        JSON.stringify(cart)
-    );
+function irParaProdutos() {
+    elemento("produtos").scrollIntoView({ behavior: "smooth" });
 }
 
 
-/* ELEMENTOS */
+// EXIBIÇÃO DOS PRODUTOS
 
-const productGrid =
-    document.getElementById("productGrid");
+function renderizarProdutos() {
+    const busca = campoBusca.value.toLowerCase().trim();
+    const categoria = filtroCategoria.value;
 
-const searchInput =
-    document.getElementById("searchInput");
-
-const categoryFilter =
-    document.getElementById("categoryFilter");
-
-const emptyState =
-    document.getElementById("emptyState");
-
-const cartCount =
-    document.getElementById("cartCount");
-
-const toast =
-    document.getElementById("toast");
-
-
-/* =========================
-   FORMATAÇÃO DO PREÇO
-========================= */
-
-function money(value) {
-
-    return value.toLocaleString(
-        "pt-BR",
-        {
-            style: "currency",
-            currency: "BRL"
-        }
+    const produtosFiltrados = listaProdutos.filter(produto =>
+        (produto.nome.toLowerCase().includes(busca) || produto.descricao.toLowerCase().includes(busca)) &&
+        (categoria === "Todos" || produto.categoria === categoria)
     );
 
-}
+    gradeProdutos.innerHTML = produtosFiltrados.map(produto => {
+        const ehFavorito = favoritos.includes(produto.id);
+        const quantidade = carrinho[produto.id] || 0;
 
-
-/* =========================
-   PRODUTOS
-========================= */
-
-function renderProducts() {
-
-    const search =
-        searchInput.value
-            .toLowerCase()
-            .trim();
-
-    const category =
-        categoryFilter.value;
-
-
-    const filtered =
-        products.filter(product => {
-
-            const matchesSearch =
-                product.name
-                    .toLowerCase()
-                    .includes(search)
-
-                ||
-
-                product.description
-                    .toLowerCase()
-                    .includes(search);
-
-
-            const matchesCategory =
-                category === "Todos"
-
-                ||
-
-                product.category === category;
-
-
-            return (
-                matchesSearch &&
-                matchesCategory
-            );
-
-        });
-
-
-    productGrid.innerHTML =
-        filtered.map(product => {
-
-            const isFavorite =
-                favorites.includes(product.id);
-
-            const quantity =
-                cart[product.id] || 0;
-
-
-            return `
-
-                <article class="product-card">
-
-                    <div class="product-image">
-
-                        <img
-                            src="${product.image}"
-                            alt="${product.name}"
-                        >
-
-                        <button
-                            class="favorite ${isFavorite ? "active" : ""}"
-                            data-favorite="${product.id}"
-                            aria-label="Favoritar">
-
-                            ${isFavorite ? "♥" : "♡"}
-
-                        </button>
-
-                    </div>
-
-
-                    <div class="product-info">
-
-                        <span class="tag">
-                            ${product.category}
-                        </span>
-
-
-                        <h3>
-                            ${product.name}
-                        </h3>
-
-
-                        <p>
-                            ${product.description}
-                        </p>
-
-
-                        <div class="product-bottom">
-
-                            <span class="price">
-                                ${money(product.price)}
-                            </span>
-
-
-                            <div class="quantity-control">
-
-                                <button
-                                    class="quantity-btn decrease"
-                                    data-quantity="decrease"
-                                    data-id="${product.id}"
-                                    aria-label="Diminuir quantidade">
-
-                                    −
-
-                                </button>
-
-
-                                <span class="quantity-value">
-                                    ${quantity}
-                                </span>
-
-
-                                <button
-                                    class="quantity-btn increase"
-                                    data-quantity="increase"
-                                    data-id="${product.id}"
-                                    aria-label="Aumentar quantidade">
-
-                                    +
-
-                                </button>
-
-                            </div>
-
+        return `
+            <article class="product-card">
+                <div class="product-image">
+                    <img src="${produto.imagem}" alt="${produto.nome}">
+                    <button class="favorite ${ehFavorito ? "active" : ""}" data-favorite="${produto.id}" aria-label="Favoritar">
+                        ${ehFavorito ? "♥" : "♡"}
+                    </button>
+                </div>
+                <div class="product-info">
+                    <span class="tag">${produto.categoria}</span>
+                    <h3>${produto.nome}</h3>
+                    <p>${produto.descricao}</p>
+                    <div class="product-bottom">
+                        <span class="price">R$ ${produto.preco.toFixed(2).replace(".", ",")}</span>
+                        <div class="quantity-control">
+                            <button class="quantity-btn decrease" data-quantity="decrease" data-id="${produto.id}" aria-label="Diminuir quantidade">−</button>
+                            <span class="quantity-value">${quantidade}</span>
+                            <button class="quantity-btn increase" data-quantity="increase" data-id="${produto.id}" aria-label="Aumentar quantidade">+</button>
                         </div>
-
                     </div>
+                </div>
+            </article>`;
+    }).join("");
 
-                </article>
-
-            `;
-
-        }).join("");
-
-
-    emptyState.hidden =
-        filtered.length !== 0;
-
-
-    updateCartCount();
-
+    estadoVazio.hidden = produtosFiltrados.length > 0;
+    contadorCarrinho.textContent = totalCarrinho();
 }
 
 
-/* =========================
-   CONTADOR DO CARRINHO
-========================= */
+// CARRINHO E FAVORITOS
 
-function updateCartCount() {
+gradeProdutos.addEventListener("click", evento => {
+    const botaoQuantidade = evento.target.closest("[data-quantity]");
+    const botaoFavorito = evento.target.closest("[data-favorite]");
 
-    const totalItems =
-        Object.values(cart)
-            .reduce(
-                (total, quantity) =>
-                    total + quantity,
-                0
-            );
+    if (botaoQuantidade) {
+        const id = Number(botaoQuantidade.dataset.id);
+        const quantidadeAtual = carrinho[id] || 0;
 
+        if (botaoQuantidade.dataset.quantity === "increase") {
+            carrinho[id] = quantidadeAtual + 1;
+        } else if (quantidadeAtual <= 1) {
+            delete carrinho[id];
 
-    cartCount.textContent =
-        totalItems;
-
-}
-
-
-/* =========================
-   MENSAGEM
-========================= */
-
-function showToast(message) {
-
-    toast.textContent =
-        message;
-
-    toast.classList.add("show");
-
-
-    clearTimeout(
-        window.toastTimer
-    );
-
-
-    window.toastTimer =
-        setTimeout(
-            () => {
-
-                toast.classList.remove(
-                    "show"
-                );
-
-            },
-            2200
-        );
-
-}
-
-
-/* =========================
-   BOTÕES DOS PRODUTOS
-========================= */
-
-productGrid.addEventListener(
-    "click",
-    event => {
-
-        const quantityButton =
-            event.target.closest(
-                "[data-quantity]"
-            );
-
-
-        const favoriteButton =
-            event.target.closest(
-                "[data-favorite]"
-            );
-
-
-        /* AUMENTAR / DIMINUIR */
-
-        if (quantityButton) {
-
-            const id =
-                Number(
-                    quantityButton.dataset.id
-                );
-
-
-            const action =
-                quantityButton.dataset.quantity;
-
-
-            const currentQuantity =
-                cart[id] || 0;
-
-
-            if (action === "increase") {
-
-                cart[id] =
-                    currentQuantity + 1;
-
-
-                showToast(
-                    "Produto adicionado ao carrinho! 🐾"
-                );
-
-            }
-
-
-            else if (
-                action === "decrease"
-            ) {
-
-                if (currentQuantity <= 1) {
-
-                    delete cart[id];
-
-                    showToast(
-                        "Produto removido do carrinho."
-                    );
-
-                }
-
-                else {
-
-                    cart[id] =
-                        currentQuantity - 1;
-
-                }
-
-            }
-
-
-            localStorage.setItem(
-                "connectpet-cart",
-                JSON.stringify(cart)
-            );
-
-
-            renderProducts();
-
+        } else {
+            carrinho[id] = quantidadeAtual - 1;
         }
 
-
-        /* FAVORITOS */
-
-        if (favoriteButton) {
-
-            const id =
-                Number(
-                    favoriteButton.dataset.favorite
-                );
-
-
-            favorites =
-                favorites.includes(id)
-
-                ?
-
-                favorites.filter(
-                    item => item !== id
-                )
-
-                :
-
-                [
-                    ...favorites,
-                    id
-                ];
-
-
-            localStorage.setItem(
-                "connectpet-favorites",
-                JSON.stringify(favorites)
-            );
-
-
-            renderProducts();
-
-
-            showToast(
-                favorites.includes(id)
-
-                ?
-
-                "Adicionado aos favoritos! ♥"
-
-                :
-
-                "Removido dos favoritos."
-            );
-
-        }
-
+        renderizarProdutos();
+        return;
     }
-);
 
+    if (botaoFavorito) {
+        const id = Number(botaoFavorito.dataset.favorite);
+        const jaEraFavorito = favoritos.includes(id);
 
-/* =========================
-   PESQUISA
-========================= */
+        favoritos = jaEraFavorito
+            ? favoritos.filter(favorito => favorito !== id)
+            : [...favoritos, id];
 
-searchInput.addEventListener(
-    "input",
-    renderProducts
-);
-
-
-categoryFilter.addEventListener(
-    "change",
-    renderProducts
-);
-
-
-/* =========================
-   CATEGORIAS
-========================= */
-
-document
-    .querySelectorAll(".category-card")
-    .forEach(card => {
-
-        card.addEventListener(
-            "click",
-            () => {
-
-                categoryFilter.value =
-                    card.dataset.filter;
-
-
-                renderProducts();
-
-
-                document
-                    .getElementById("produtos")
-                    .scrollIntoView({
-                        behavior: "smooth"
-                    });
-
-            }
-        );
-
-    });
-
-
-/* =========================
-   CARRINHO
-========================= */
-
-document
-    .getElementById("cartBtn")
-    .addEventListener(
-        "click",
-        () => {
-
-            const totalItems =
-                Object.values(cart)
-                    .reduce(
-                        (total, quantity) =>
-                            total + quantity,
-                        0
-                    );
-
-
-            if (!totalItems) {
-
-                showToast(
-                    "Seu carrinho está vazio."
-                );
-
-                return;
-            }
-
-
-            showToast(
-                `Você tem ${totalItems} item(ns) no carrinho.`
-            );
-
-        }
-    );
-
-
-/* =========================
-   FAVORITOS
-========================= */
-
-document
-    .getElementById("favoritesBtn")
-    .addEventListener(
-        "click",
-        () => {
-
-            if (!favorites.length) {
-
-                showToast(
-                    "Você ainda não tem favoritos."
-                );
-
-                return;
-            }
-
-
-            categoryFilter.value =
-                "Todos";
-
-            searchInput.value =
-                "";
-
-
-            renderProducts();
-
-
-            document
-                .getElementById("produtos")
-                .scrollIntoView({
-                    behavior: "smooth"
-                });
-
-
-            showToast(
-                `Você tem ${favorites.length} favorito(s). ♥`
-            );
-
-        }
-    );
-
-
-/* =========================
-   MENU MOBILE
-========================= */
-
-const nav =
-    document.getElementById("nav");
-
-
-document
-    .getElementById("menuBtn")
-    .addEventListener(
-        "click",
-        () => {
-
-            nav.classList.toggle(
-                "open"
-            );
-
-        }
-    );
-
-
-document
-    .querySelectorAll(".nav a")
-    .forEach(link => {
-
-        link.addEventListener(
-            "click",
-            () => {
-
-                nav.classList.remove(
-                    "open"
-                );
-
-            }
-        );
-
-    });
-
-
-/* =========================
-   MODAL DE AGENDAMENTO
-========================= */
-
-const modal =
-    document.getElementById(
-        "appointmentModal"
-    );
-
-
-const serviceSelect =
-    document.getElementById(
-        "serviceSelect"
-    );
-
-
-function openModal(service = "") {
-
-    modal.classList.add("open");
-
-    modal.setAttribute(
-        "aria-hidden",
-        "false"
-    );
-
-
-    serviceSelect.value =
-        service;
-
-
-    document
-        .getElementById("clientName")
-        .focus();
-
-}
-
-
-function closeModal() {
-
-    modal.classList.remove(
-        "open"
-    );
-
-    modal.setAttribute(
-        "aria-hidden",
-        "true"
-    );
-
-}
-
-
-document
-    .getElementById("openAppointment")
-    .addEventListener(
-        "click",
-        () => openModal()
-    );
-
-
-document
-    .getElementById("closeAppointment")
-    .addEventListener(
-        "click",
-        closeModal
-    );
-
-
-modal.addEventListener(
-    "click",
-    event => {
-
-        if (
-            event.target === modal
-        ) {
-
-            closeModal();
-
-        }
-
+        renderizarProdutos();
+        mostrarAviso(jaEraFavorito ? "Removido dos favoritos." : "Adicionado aos favoritos! ♥");
     }
-);
+});
 
+campoBusca.addEventListener("input", renderizarProdutos);
+filtroCategoria.addEventListener("change", renderizarProdutos);
 
-/* BOTÕES DE SERVIÇO */
-
-document
-    .querySelectorAll(".service-book")
-    .forEach(button => {
-
-        button.addEventListener(
-            "click",
-            () => {
-
-                openModal(
-                    button.dataset.service
-                );
-
-            }
-        );
-
+document.querySelectorAll(".category-card").forEach(cartao => {
+    cartao.addEventListener("click", () => {
+        filtroCategoria.value = cartao.dataset.filter;
+        renderizarProdutos();
+        irParaProdutos();
     });
+});
 
 
-/* =========================
-   FORMULÁRIO
-========================= */
+// JANELA DO CARRINHO E CONFIRMAÇÃO
 
-document
-    .getElementById("appointmentForm")
-    .addEventListener(
-        "submit",
-        event => {
+function renderizarCarrinho() {
+    const produtosNoCarrinho = listaProdutos.filter(produto => carrinho[produto.id]);
 
-            event.preventDefault();
+    itensCarrinho.innerHTML = produtosNoCarrinho.length
+        ? produtosNoCarrinho.map(produto => `
+            <div class="cart-item">
+                <span>${produto.nome} × ${carrinho[produto.id]}</span>
+                <span>R$ ${(produto.preco * carrinho[produto.id]).toFixed(2).replace(".", ",")}</span>
+            </div>`).join("")
+        : '<p class="cart-empty">Seu carrinho está vazio.</p>';
 
-
-            const name =
-                document
-                    .getElementById("clientName")
-                    .value;
-
-
-            const pet =
-                document
-                    .getElementById("petName")
-                    .value;
-
-
-            const service =
-                serviceSelect.value;
-
-
-            const date =
-                document
-                    .getElementById("appointmentDate")
-                    .value;
-
-
-            const formattedDate =
-                new Date(
-                    `${date}T12:00:00`
-                )
-                    .toLocaleDateString(
-                        "pt-BR"
-                    );
-
-
-            document
-                .getElementById("formMessage")
-                .textContent =
-
-                `Pronto, ${name}! O atendimento de ${pet} para ${service} foi solicitado para ${formattedDate}.`;
-
-
-            event.target.reset();
-
-
-            showToast(
-                "Agendamento realizado! 🐶"
-            );
-
-        }
+    const total = produtosNoCarrinho.reduce(
+        (soma, produto) => soma + produto.preco * carrinho[produto.id], 0
     );
 
+    totalCarrinhoTexto.textContent = "R$ " + total.toFixed(2).replace(".", ",");
+    botaoConfirmarCompra.disabled = produtosNoCarrinho.length === 0;
+}
 
-/* =========================
-   DATA MÍNIMA
-========================= */
+function abrirCarrinho() {
+    renderizarCarrinho();
+    modalCarrinho.classList.add("open");
+    modalCarrinho.setAttribute("aria-hidden", "false");
+}
 
-const today =
-    new Date()
-        .toISOString()
-        .split("T")[0];
+function fecharCarrinho() {
+    modalCarrinho.classList.remove("open");
+    modalCarrinho.setAttribute("aria-hidden", "true");
+}
+
+elemento("cartBtn").addEventListener("click", abrirCarrinho);
+elemento("closeCart").addEventListener("click", fecharCarrinho);
+elemento("cancelPurchase").addEventListener("click", fecharCarrinho);
+
+modalCarrinho.addEventListener("click", evento => {
+    if (evento.target === modalCarrinho) fecharCarrinho();
+});
+
+botaoConfirmarCompra.addEventListener("click", () => {
+    if (!totalCarrinho()) return;
+
+    carrinho = {};
+    renderizarProdutos();
+    fecharCarrinho();
+    mostrarAviso("Compra confirmada! Obrigado pela preferência.");
+});
+
+elemento("favoritesBtn").addEventListener("click", () => {
+    if (!favoritos.length) {
+        mostrarAviso("Você ainda não tem favoritos.");
+        return;
+    }
+
+    filtroCategoria.value = "Todos";
+    campoBusca.value = "";
+    renderizarProdutos();
+    irParaProdutos();
+    mostrarAviso(`Você tem ${favoritos.length} favorito(s). ♥`);
+});
 
 
-document
-    .getElementById("appointmentDate")
-    .min = today;
+// MENU PARA CELULAR
+
+elemento("menuBtn").addEventListener("click", () => navegacao.classList.toggle("open"));
+
+document.querySelectorAll(".nav a").forEach(link => {
+    link.addEventListener("click", () => navegacao.classList.remove("open"));
+});
 
 
-/* =========================
-   INICIALIZAÇÃO
-========================= */
+// AGENDAMENTO
 
-renderProducts();
+function abrirModal(servico = "") {
+    modalAgendamento.classList.add("open");
+    modalAgendamento.setAttribute("aria-hidden", "false");
+    seletorServico.value = servico;
+    elemento("clientName").focus();
+}
+
+function fecharModal() {
+    modalAgendamento.classList.remove("open");
+    modalAgendamento.setAttribute("aria-hidden", "true");
+}
+
+elemento("openAppointment").addEventListener("click", () => abrirModal());
+elemento("closeAppointment").addEventListener("click", fecharModal);
+
+modalAgendamento.addEventListener("click", evento => {
+    if (evento.target === modalAgendamento) fecharModal();
+});
+
+document.querySelectorAll(".service-book").forEach(botao => {
+    botao.addEventListener("click", () => abrirModal(botao.dataset.service));
+});
+
+elemento("appointmentForm").addEventListener("submit", evento => {
+    evento.preventDefault();
+
+    const nomeCliente = elemento("clientName").value;
+    const nomePet = elemento("petName").value;
+    const servico = seletorServico.value;
+    const dataFormatada = new Date(`${campoData.value}T12:00:00`).toLocaleDateString("pt-BR");
+
+    elemento("formMessage").textContent = `Pronto, ${nomeCliente}! O atendimento de ${nomePet} para ${servico} foi solicitado para ${dataFormatada}.`;
+    evento.target.reset();
+    mostrarAviso("Agendamento realizado! ");
+});
+
+// Mostra os produtos assim que a página carrega.
+renderizarProdutos();
